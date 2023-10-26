@@ -1,0 +1,87 @@
+<h1 class="mt-4">{{viewForm.view?.title || 'Clients'}}</h1>
+<ol class="breadcrumb mb-2">
+    <li class="breadcrumb-item active">{{viewForm.view?.description || 'Register Client'}}</li>
+</ol>
+<div>
+    <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-md-1 col-sm-2 col-4">
+                <div class="form-group">
+                    <label for="id"><strong>ID</strong></label>
+                    <input type="text" class="form-control bg-dark text-white" formControlName="id" readonly />
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6">
+                <div class="form-group">
+                    <label for="id"><strong>{{viewForm.view?.fields.name || 'Name'}}</strong></label>
+                    <input type="text" class="form-control bg-dark text-white" formControlName="name" />
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="form-group">
+                    <label for="id"><strong>CPF</strong></label>
+                    <input type="text" [mask]="cpfMask" class="form-control bg-dark text-white" formControlName="cpf" />
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="form-group">
+                    <label for="id"><strong>{{viewForm.view?.fields.birthDate || 'Birth Date'}}</strong></label>
+                    <input type="date" class="form-control bg-dark text-white" formControlName="birthDate" />
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="form-group">
+                    <label for="id"><strong>{{viewForm.view?.fields.registerDate || 'Register Date'}}</strong></label>
+                    <input type="date" class="form-control bg-dark text-white" formControlName="registerDate" readonly />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 col-sm-4 col-6 mt-2">
+                <button type="submit" class="btn btn-success" [disabled]="!clientForm.valid || clientForm.value.id != null">
+                    <i class="fa fa-save mr-2"></i>{{viewForm.view?.buttons.save || 'Save'}}
+                </button>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6 mt-2">
+                <a class="btn btn-primary" (click)="clear()">
+                    <i class="fa fa-eraser mr-2"></i>{{viewForm.view?.buttons.clear || 'Clear'}}
+                </a>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6 mt-2" *ngIf="clientForm.value.id != null">
+                <a class="btn btn-danger" (click)="delete()">
+                    <i class="fa fa-trash mr-2"></i>{{viewForm.view?.buttons.delete || 'Delete'}}
+                </a>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6 mt-2" *ngIf="clientForm.value.id != null">
+                <a class="btn btn-warning" (click)="alter()">
+                    <i class="fa fa-pen mr-2"></i>{{viewForm.view?.buttons.alter || 'Alter'}}
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item active">{{viewForm.view?.registered || 'Registered Clients'}}</li>
+</ol>
+
+<mat-form-field class="row col-md-3 col-8">
+    <input matInput #filter (keyup)="applyFilter(filter.value)" placeholder="{{viewForm.view?.filter || 'Filter'}}">
+</mat-form-field>
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="clients" matSort>
+        <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef> # </th>
+            <td mat-cell *matCellDef="let index = index"> {{index + 1}} </td>
+        </ng-container>
+        <ng-container *ngFor="let column of columns" [matColumnDef]="column.prop">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column.title}} </th>
+            <!-- <td mat-cell *matCellDef="let row"> {{column.prop == 'cpf' ? (row[column.prop] | mask: cpfMask) : (row[column.prop])}} </td> -->
+            <td mat-cell *matCellDef="let row"> {{validatePipe(row, column)}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row (click)="select(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+</div>

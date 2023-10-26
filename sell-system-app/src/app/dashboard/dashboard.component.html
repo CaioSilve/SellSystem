@@ -1,0 +1,4 @@
+<h1 class="mt-4">{{viewForm.view?.title || 'Dashboard'}}</h1>
+<div class="row">
+    <card *ngFor="let card of cards" [title]="card.title" [details]="card.details" [color]="card.color ?? 'primary'" [textColor]="card.textColor ?? 'white'" class="col-xl-3 col-md-6"></card>
+</div>

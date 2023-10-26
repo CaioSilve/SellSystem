@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "security.enable",
+  "type": "java.lang.Boolean",
+  "description": "Customizada para habilitar seguraça"
+}]}
