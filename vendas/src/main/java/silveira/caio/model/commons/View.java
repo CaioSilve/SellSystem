@@ -16,10 +16,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class View {
 
+	private String key;
 	private String title;
 	private String description;
 	private String registered;
 	private String filter;
+	private List<Row> rows;
+	// identificar dps se é possivel usar apenas a row
 	private Map<String, String> fields;
 	private Map<String, String> buttons;
 	private List<ColumnsView> columns;

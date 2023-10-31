@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { MatSort, Sort } from '@angular/material/sort';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ViewForm } from 'src/app/commons/view-form.model';
 import { Client } from '../client.model';
@@ -8,6 +8,7 @@ import { ClientsService } from 'src/app/services/clients.service';
 import { NgxMaskPipe } from 'ngx-mask';
 import { DatePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'clients-form',
@@ -18,9 +19,15 @@ export class ClientsFormComponent implements OnInit {
 
   @ViewChild(MatSort)
   sort: MatSort;
-  
-  @ViewChild(MatPaginator) 
+
+  @ViewChild(MatPaginator)
   paginator: MatPaginator;
+
+  @ViewChild('confirmModal')
+  confirmModal: TemplateRef<any>;
+
+  @ViewChild('findModal')
+  findModal: TemplateRef<any>;
 
 
   cpfMask = '000.000.000-00';
@@ -34,39 +41,54 @@ export class ClientsFormComponent implements OnInit {
     registerDate: [''],
   });
 
+  clientFilter = this.fb.group({
+    id: [null],
+    name: [null, Validators.required],
+    cpf: [null],
+    birthDate: [null],
+    registerDate: [''],
+  });
+
+
+
   viewForm: ViewForm = new ViewForm;
   clients: MatTableDataSource<Client>;
   columns: any[] = [];
   displayedColumns: string[] = [];
 
-  constructor(private fb: FormBuilder, private service: ClientsService, private maskPipe: NgxMaskPipe, private datePipe: DatePipe) {
+  constructor(private fb: FormBuilder, private service: ClientsService, private maskPipe: NgxMaskPipe, private datePipe: DatePipe, private dialog: MatDialog) {
 
   }
 
   ngOnInit(): void {
-    this.loadTable();
+    this.loadTable(new Client());
   }
 
   onSubmit() {
     this.service.postClient(this.clientForm.value).subscribe(viewForm => {
-      this.loadTable();
+      this.loadTable(new Client());
+      this.clear();
     });
+  }
+
+  find(){
+    this.loadTable(Object.assign(new Client, this.clientFilter.value));
+    this.dialog.closeAll();
   }
 
   clear() {
     this.clientForm.reset();
   }
 
-  alter(){
+  alter() {
     this.service.alterClient(this.clientForm.value).subscribe(viewForm => {
-      this.loadTable();
+      this.loadTable(new Client());
+      this.clear();
     });
   }
 
-  delete(){
-    this.service.deleteClient(this.clientForm.value.id).subscribe(viewForm => {
-      this.loadTable();
-    });
+  delete() {
+    this.openModal(this.confirmModal, '350px', 'null');
   }
 
   select(selected: any) {
@@ -94,8 +116,8 @@ export class ClientsFormComponent implements OnInit {
     }
   }
 
-  loadTable() {
-    this.service.listClients(new Client()).subscribe(viewForm => {
+  loadTable(filter: Client) {
+    this.service.listClients(filter).subscribe(viewForm => {
       this.viewForm = viewForm;
       this.clients = new MatTableDataSource(viewForm.data);
       this.clients.sort = this.sort;
@@ -105,6 +127,24 @@ export class ClientsFormComponent implements OnInit {
         return c.prop;
       })];
     });
+  }
+
+  openModal(templateRef: any, width: string, height: string) {
+    let dialogRef = this.dialog.open(templateRef, {
+      width: width,
+      height: height
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      console.log(confirmed);
+    });
+  }
+
+  onConfirmDeleteModalClick(): void {
+    this.service.deleteClient(this.clientForm.value.id).subscribe(viewForm => {
+      this.loadTable(new Client());
+    });
+    this.dialog.closeAll();
   }
 
 }

@@ -20,5 +20,6 @@ INSERT INTO languages (id, locale, messagekey,messagecontent) VALUES
 (16, 'en', 'view.client.title','Client'),
 (17, 'en', 'view.client.description','Register'),
 (18, 'en', 'view.client.registered','Clients Registered'),
-(19, 'en', 'button.clear','Clear')
+(19, 'en', 'button.clear','Clear'),
+(20, 'en', 'field.filter','Filter')
 ;

@@ -1,5 +1,7 @@
 package silveira.caio.model.commons;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,14 +13,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Field {
+public class Row {
 
-	private String id;
-	private Integer row;
 	private Integer order;
-	private String title;
-	private String type;
 	private String styleClass;
-	private String mask;
-	private Boolean readonly;
+	private String condition;
+	private List<Field> fields;
+
 }
