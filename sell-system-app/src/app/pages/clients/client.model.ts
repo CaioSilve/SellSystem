@@ -4,4 +4,9 @@ export class Client{
     cpf: string
     birthDate: string
     registerDate: string
+    email: string
+    cellphone: string
+    address: string
+    numberAddress: string
+    observation: string
 }

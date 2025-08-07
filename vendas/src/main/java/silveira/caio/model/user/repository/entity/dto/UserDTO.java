@@ -1,4 +1,4 @@
-package silveira.caio.model.commons;
+package silveira.caio.model.user.repository.entity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,13 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ViewForm<T> {
+@Getter
+@Setter
+@Builder
+public class UserDTO {
 	
-	private View view;
-	private T data;
+	private Long id;
+	private String name;
+	private String locale;
 }

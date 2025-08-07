@@ -1,21 +1,19 @@
-package silveira.caio.model.commons;
+package silveira.caio.model.commons.view;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import silveira.caio.model.commons.view.repository.entity.View;
 
+@Builder
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ColumnsView {
+public class ViewForm<T> {
 	
-	private String title;
-	private String prop;
-	private String type;
-	private Integer position;
-
+	private View view;
+	private T data;
 }

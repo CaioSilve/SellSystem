@@ -15,7 +15,7 @@ import silveira.caio.model.order.repository.entity.form.OrderForm;
 import silveira.caio.model.order.repository.service.mapper.OrderMapper;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/orders")
 public class OrderResource {
 
 	@Autowired

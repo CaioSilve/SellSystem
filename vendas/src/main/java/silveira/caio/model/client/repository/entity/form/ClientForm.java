@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +25,14 @@ public class ClientForm {
 	private String cpf;
 	private LocalDate birthDate;
 	private LocalDate registerDate;
+	@Email(message = "{field.email.invalid}")
+	private String email;
+	private String cellphone;
+	private Boolean sendPromotions;
+	private String address;
+	private String district;
+	private String numberAddress;
+	private String observation;
+	private Long idCity;
+	
 }

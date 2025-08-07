@@ -18,9 +18,10 @@ import jakarta.validation.Valid;
 import silveira.caio.model.client.repository.entity.dto.ClientDTO;
 import silveira.caio.model.client.repository.entity.form.ClientForm;
 import silveira.caio.model.client.repository.service.ClientService;
-import silveira.caio.model.client.repository.service.ViewClientService;
 import silveira.caio.model.client.repository.service.mapper.ClientMapper;
-import silveira.caio.model.commons.ViewForm;
+import silveira.caio.model.commons.enums.ViewsEnum;
+import silveira.caio.model.commons.view.ViewForm;
+import silveira.caio.model.commons.view.service.ViewService;
 
 @RestController
 @RequestMapping("/clients")
@@ -32,7 +33,7 @@ public class ClientResource {
 	private ClientService service;
 
 	@Autowired
-	private ViewClientService viewService;
+	private ViewService viewService;
 
 	@Autowired
 	protected ClientMapper mapper;
@@ -40,7 +41,7 @@ public class ClientResource {
 	@PostMapping("/list")
 	@ResponseStatus(value = HttpStatus.OK)
 	public ViewForm<Object> list(@RequestBody ClientForm filter) {
-		return ViewForm.builder().view(viewService.generateView())
+		return ViewForm.builder().view(viewService.generateView(ViewsEnum.CLIENT.getValue()))
 				.data(mapper.toListDto(service.list(mapper.toEntity(filter)))).build();
 	}
 

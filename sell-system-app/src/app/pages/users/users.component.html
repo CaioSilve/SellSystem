@@ -1,0 +1,97 @@
+<ng-template #confirmModal>
+    <h1 mat-dialog-title>Delete file</h1>
+    <div mat-dialog-content>
+        Would you like to delete this User?
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close value="no">No</button>
+        <button mat-button cdkFocusInitial (click)="onConfirmDeleteModalClick()">Yes</button>
+    </div>
+</ng-template>
+
+<ng-template #findModal>
+    <h1 mat-dialog-title><strong>{{viewForm.view?.messages.find || 'Find'}}</strong></h1>
+    <form [formGroup]="userFilter" (ngSubmit)="find()">
+        <div class="row ml-2 col-11" *ngFor="let row of viewForm.view?.rows">
+            <div *ngFor="let field of row.fields" [class]="field.styleFindClass" >
+                <div class="form-group">
+                    <label [for]="field.keyField">{{field.title}}</label>
+                    <input [type]="field.type" [mask]="field.mask" class="form-control bg-dark text-white" [formControlName]="field.prop" />
+                </div>
+            </div>
+        </div>
+        <div class="row ml-2 col-11 mt-4">
+            <div class="col-md-6 col-12"></div>
+            <div class="col-md-6 col-12 text-right">
+                <button type="submit" class="btn btn-success">
+                    <i class="fa fa-search mr-2"></i>{{viewForm.view?.messages.find || 'Find'}}
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+<h1 class="mt-4">{{viewForm.view?.messages.title || 'Users'}}</h1>
+<ol class="breadcrumb mb-2">
+    <li class="breadcrumb-item active">{{this.userForm.value.id ? viewForm.view?.messages.edit || 'Edit User' : viewForm.view?.messages.register || 'Register User'}}</li>
+</ol>
+<div>
+    <form [formGroup]="userForm" (ngSubmit)="submit()">
+        <div class="row" *ngFor="let row of viewForm.view?.rows">
+            <ng-container *ngIf="shownedRows.includes(row.orderRow)">
+                <div *ngFor="let field of row.fields" [class]="field.styleClass">
+                    <div class="form-group">
+                        <label [for]="field.keyField"><strong>{{field.title}}</strong></label>
+                        <input [type]="field.type" [mask]="field.mask" class="form-control bg-dark text-white" [formControlName]="field.prop"
+                            [readonly]="field.readonly" (keyup)="validateAll()" />
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+
+        <!-- BUTTONS -->
+        <div class="row">
+            <div class="col-md-2 col-sm-4 col-6 mt-2" *ngFor="let button of viewForm.view?.buttons">
+                <ng-container *ngIf="shownedButtons.includes(button.orderButton)">
+                    <a [class]="button.styleClass" (click)="buttonClick(button.action)" [class.disabled]="disabledButtons.includes(button.orderButton)">
+                        <i [class]="button.iconClass"></i>{{button.title}}
+                    </a>
+                </ng-container>
+            </div>
+        </div>
+    </form>
+</div>
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item active">{{viewForm.view?.messages.registered || 'Registered Users'}}</li>
+</ol>
+
+<div class="row">
+    <div class="col-md-2 col-sm-4 col-6">
+        <div class="form-group">
+            <input type="text" #filter class="form-control bg-dark text-white" (keyup)="applyFilter(filter.value)"
+                placeholder="{{viewForm.view?.messages.filter || 'Filter'}}" />
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-6">
+        <a class="btn btn-secondary" (click)="openModal(findModal, '450px', '500px')">
+            <i class="fas fa-search mr-2"></i>{{viewForm.view?.messages.find || 'Find'}}
+        </a>
+    </div>
+</div>
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="users" matSort>
+        <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef> # </th>
+            <td mat-cell *matCellDef="let index = index"> {{index + 1}} </td>
+        </ng-container>
+        <ng-container *ngFor="let column of columns" [matColumnDef]="column.prop">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column.title}} </th>
+            <td mat-cell *matCellDef="let row"> {{validatePipe(row, column)}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row (click)="select(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="pageSize" showFirstLastButtons></mat-paginator>
+</div>

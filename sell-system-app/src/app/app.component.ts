@@ -1,36 +1,25 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
-import * as jQuery from 'jquery';
+import { AppService } from './services/app.service';
+import { finalize } from 'rxjs';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent {
   title = 'sell-system-app';
-
-
-  ngAfterViewInit() {
-    (function ($) {
-      "use strict";
-
-      // Add active state to sidbar nav links
-      var path = window.location.href; // because the 'href' property of the DOM element is the absolute path
-      $("#layoutSidenav_nav .sb-sidenav a.nav-link").each(function () {
-        if (this instanceof HTMLAnchorElement && this.href === path) {
-          $(this).addClass("active");
-        }
-      });
-
-      // Toggle the side navigation
-      $("#sidebarToggle").on("click", function (e) {
-        e.preventDefault();
-        $("body").toggleClass("sb-sidenav-toggled");
-      });
-    })(jQuery);
+  constructor(private app: AppService, private http: HttpClient, private router: Router) {
+    this.app.authenticate(undefined, undefined);
   }
-
-
-
+  logout() {
+    this.http.post('logout', {}).pipe(finalize(() => {
+        this.app.authenticated = false;
+        this.router.navigateByUrl('/login');
+    })).subscribe();
+  }
 }

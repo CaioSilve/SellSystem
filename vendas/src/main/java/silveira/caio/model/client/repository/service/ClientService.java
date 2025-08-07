@@ -19,7 +19,7 @@ import silveira.caio.model.client.repository.service.mapper.ClientMapper;
 public class ClientService {
 
 	@Autowired
-	ClientMapper mapper;
+	private ClientMapper mapper;
 	
 	@Autowired
 	private ClientRepository repository;

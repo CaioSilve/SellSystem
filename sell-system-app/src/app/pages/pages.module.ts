@@ -10,18 +10,21 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 
-import { ClientsRoutingModule } from './clients-routing.module';
-import { ClientsFormComponent } from './clients-form/clients-form.component';
+import { PagesRoutingModule } from './pages-routing.module';
+import { ClientsComponent } from './clients/clients.component';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { UsersComponent } from './users/users.component';
+
 
 
 @NgModule({
   declarations: [
-    ClientsFormComponent
+    ClientsComponent,
+    UsersComponent
   ],
   imports: [
     CommonModule,
-    ClientsRoutingModule,
+    PagesRoutingModule,
     ReactiveFormsModule,
     MatTableModule,
     MatPaginatorModule,
@@ -35,11 +38,11 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
     MatButtonModule
   ],
   exports: [
-    ClientsFormComponent
+    ClientsComponent
   ],
   providers: [
     NgxMaskPipe,
     DatePipe
   ]
 })
-export class ClientsModule { }
+export class PagesModule { }
